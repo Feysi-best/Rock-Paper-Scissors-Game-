@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rock Paper Scissors | Feysal's Portfolio</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #4a6fa5;
+      --secondary: #166088;
+      --accent: #4fc3f7;
+      --dark: #2d3142;
+      --light: #f5f5f5;
+      --success: #4caf50;
+      --danger: #f44336;
+      --warning: #ff9800;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    
+    .game-container {
+      background-color: white;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 600px;
+      padding: 30px;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+    
+    .game-title {
+      color: var(--dark);
+      margin-bottom: 20px;
+      font-size: 2.5rem;
+      position: relative;
+      display: inline-block;
+    }
+    
+    .game-title::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 4px;
+      background: var(--accent);
+      border-radius: 2px;
+    }
+    
+    .choices-container {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin: 30px 0;
+      flex-wrap: wrap;
+    }
+    
+    .choice-btn {
+      background-color: white;
+      border: 3px solid var(--primary);
+      border-radius: 50%;
+      width: 100px;
+      height: 100px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 3rem;
+      color: var(--primary);
+    }
+    
+    .choice-btn:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      background-color: var(--primary);
+      color: white;
+    }
+    
+    .choice-btn:active {
+      transform: translateY(0);
+    }
+    
+    .game-result {
+      margin: 25px 0;
+      font-size: 1.5rem;
+      font-weight: bold;
+      min-height: 30px;
+    }
+    
+    .win {
+      color: var(--success);
+    }
+    
+    .lose {
+      color: var(--danger);
+    }
+    
+    .tie {
+      color: var(--warning);
+    }
+    
+    .moves-display {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-bottom: 20px;
+    }
+    
+    .move {
+      text-align: center;
+    }
+    
+    .move-icon {
+      font-size: 3rem;
+      margin-bottom: 10px;
+      color: var(--secondary);
+    }
+    
+    .score-display {
+      background-color: var(--light);
+      padding: 15px;
+      border-radius: 8px;
+      margin: 20px 0;
+      display: flex;
+      justify-content: space-around;
+    }
+    
+    .score-item {
+      text-align: center;
+    }
+    
+    .score-value {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: var(--dark);
+    }
+    
+    .reset-btn {
+      background-color: var(--danger);
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 50px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 auto;
+    }
+    
+    .reset-btn:hover {
+      background-color: #d32f2f;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(244, 67, 54, 0.3);
+    }
+    
+    .reset-btn:active {
+      transform: translateY(0);
+    }
+    
+    .confetti {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      background-color: var(--accent);
+      opacity: 0;
+    }
+    
+    @media (max-width: 500px) {
+      .game-container {
+        padding: 20px;
+      }
+      
+      .choices-container {
+        gap: 15px;
+      }
+      
+      .choice-btn {
+        width: 80px;
+        height: 80px;
+        font-size: 2.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="game-container">
+    <h1 class="game-title">Rock Paper Scissors</h1>
+    
+    <div class="choices-container">
+      <button class="choice-btn" onclick="playGame('Rock')">
+        <i class="fas fa-hand-rock"></i>
+      </button>
+      <button class="choice-btn" onclick="playGame('Paper')">
+        <i class="fas fa-hand-paper"></i>
+      </button>
+      <button class="choice-btn" onclick="playGame('Scissors')">
+        <i class="fas fa-hand-scissors"></i>
+      </button>
+    </div>
+    
+    <div class="moves-display">
+      <div class="move">
+        <div class="move-icon" id="player-move">
+          <i class="fas fa-question"></i>
+        </div>
+        <p>You</p>
+      </div>
+      <div class="move">
+        <div class="move-icon" id="computer-move">
+          <i class="fas fa-question"></i>
+        </div>
+        <p>Computer</p>
+      </div>
+    </div>
+    
+    <div class="game-result" id="result"></div>
+    
+    <div class="score-display">
+      <div class="score-item">
+        <p>Wins</p>
+        <p class="score-value" id="wins">0</p>
+      </div>
+      <div class="score-item">
+        <p>Losses</p>
+        <p class="score-value" id="losses">0</p>
+      </div>
+      <div class="score-item">
+        <p>Ties</p>
+        <p class="score-value" id="ties">0</p>
+      </div>
+    </div>
+    
+    <button class="reset-btn" onclick="resetScore()">
+      <i class="fas fa-redo"></i> Reset Score
+    </button>
+  </div>
+
+  <script>
+    // Game state
+    let score = JSON.parse(localStorage.getItem('score')) || {
+      wins: 0,
+      losses: 0,
+      ties: 0
+    };
+
+    // Initialize game
+    updateScoreDisplay();
+
+    function playGame(playerMove) {
+      const computerMove = getComputerMove();
+      const result = determineWinner(playerMove, computerMove);
+
+      // Update moves display
+      document.getElementById('player-move').innerHTML = 
+        `<i class="fas fa-hand-${playerMove.toLowerCase()}"></i>`;
+      document.getElementById('computer-move').innerHTML = 
+        `<i class="fas fa-hand-${computerMove.toLowerCase()}"></i>`;
+
+      // Update result
+      const resultElement = document.getElementById('result');
+      resultElement.textContent = result;
+      
+      // Add appropriate class based on result
+      resultElement.className = 'game-result';
+      if (result === 'You win!') {
+        resultElement.classList.add('win');
+        createConfetti();
+      } else if (result === 'You lose!') {
+        resultElement.classList.add('lose');
+      } else {
+        resultElement.classList.add('tie');
+      }
+
+      // Update score
+      updateScore(result);
+      localStorage.setItem('score', JSON.stringify(score));
+      updateScoreDisplay();
+    }
+
+    function getComputerMove() {
+      const randomNumber = Math.random();
+      if (randomNumber < 1/3) return 'Rock';
+      if (randomNumber < 2/3) return 'Paper';
+      return 'Scissors';
+    }
+
+    function determineWinner(playerMove, computerMove) {
+      if (playerMove === computerMove) return 'Tie!';
+      
+      const winMap = { 
+        Rock: 'Scissors', 
+        Paper: 'Rock', 
+        Scissors: 'Paper' 
+      };
+      
+      return winMap[playerMove] === computerMove ? 'You win!' : 'You lose!';
+    }
+
+    function updateScore(result) {
+      if (result === 'You win!') score.wins++;
+      else if (result === 'You lose!') score.losses++;
+      else score.ties++;
+    }
+
+    function updateScoreDisplay() {
+      document.getElementById('wins').textContent = score.wins;
+      document.getElementById('losses').textContent = score.losses;
+      document.getElementById('ties').textContent = score.ties;
+    }
+
+    function resetScore() {
+      score = { wins: 0, losses: 0, ties: 0 };
+      localStorage.removeItem('score');
+      updateScoreDisplay();
+      
+      // Reset game display
+      document.getElementById('result').textContent = '';
+      document.getElementById('result').className = 'game-result';
+      document.getElementById('player-move').innerHTML = '<i class="fas fa-question"></i>';
+      document.getElementById('computer-move').innerHTML = '<i class="fas fa-question"></i>';
+    }
+
+    function createConfetti() {
+      const colors = ['#4fc3f7', '#4a6fa5', '#166088', '#2d3142'];
+      
+      for (let i = 0; i < 50; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.left = Math.random() * window.innerWidth + 'px';
+        document.body.appendChild(confetti);
+        
+        // Animate confetti
+        const animation = confetti.animate([
+          { transform: 'translateY(0) rotate(0deg)', opacity: 1 },
+          { transform: `translateY(${window.innerHeight}px) rotate(${Math.random() * 360}deg)`, opacity: 0 }
+        ], {
+          duration: 1000 + Math.random() * 2000,
+          easing: 'cubic-bezier(0.1, 0.8, 0.3, 1)'
+        });
+        
+        animation.onfinish = () => confetti.remove();
+      }
+    }
+  </script>
+</body>
+</html>
